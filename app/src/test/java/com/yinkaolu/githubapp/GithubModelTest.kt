@@ -14,8 +14,8 @@ class GithubModelTest {
         val userJsonElement = JsonParser().parse("{\"name\": \"The Octocat\",\"avatar_url\": \"https://avatars3.githubusercontent.com/u/583231?v=4\"}")
         val githubUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
 
-        assertEquals(githubUser.avatarURL, "https://avatars3.githubusercontent.com/u/583231?v=4")
-        assertEquals(githubUser.name, "The Octocat")
+        assertEquals("https://avatars3.githubusercontent.com/u/583231?v=4", githubUser.avatarURL)
+        assertEquals("The Octocat", githubUser.name)
     }
 
     @Test
