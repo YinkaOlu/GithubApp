@@ -1,4 +1,4 @@
 
-https://github.com/yinkaolu/githubapp/workflows/android_ci/badge.svg
+![status badge](https://github.com/yinkaolu/githubapp/workflows/android_ci/badge.svg)
 # GithubApp
  
