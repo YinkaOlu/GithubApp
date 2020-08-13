@@ -20,10 +20,8 @@ class GithubViewModel(repository: GithubRepository = DefaultGithubRepository()) 
 
     fun loadUserData(userName: String, forceDownload: Boolean=false) {
         if ((!userName.isNullOrEmpty() && userName !== previousUserName) || forceDownload) {
-            thread {
-                repository.loadUser(userName)
-                repository.loadUserRepo(userName)
-            }
+            repository.loadUser(userName)
+            repository.loadUserRepo(userName)
 
             previousUserName = userName
         }

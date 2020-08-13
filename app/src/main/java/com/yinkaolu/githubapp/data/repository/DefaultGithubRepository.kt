@@ -6,6 +6,7 @@ import com.yinkaolu.githubapp.data.api.GithubAPIClient
 import com.yinkaolu.githubapp.data.api.RetrofitGithubClient
 import com.yinkaolu.githubapp.data.model.GithubRepo
 import com.yinkaolu.githubapp.data.model.GithubUser
+import kotlin.concurrent.thread
 
 class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient()): GithubRepository(apiClient) {
     override fun loadUser(userName: String) {
