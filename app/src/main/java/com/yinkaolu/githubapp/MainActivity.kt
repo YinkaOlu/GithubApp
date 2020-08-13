@@ -3,6 +3,7 @@ package com.yinkaolu.githubapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
@@ -35,24 +36,19 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.state.observe(this) {
-            when(it) {
-                DataState.EMPTY -> {
-
-                }
-                DataState.FAILED -> {
-
-                }
-                DataState.LOADED -> {
-
-                }
-                DataState.LOADING -> {
-
-                }
-            }
+            showProgress(it)
         }
 
         searchBtn.setOnClickListener {
             viewModel.getUser(editSearch.text.toString())
+        }
+    }
+
+    fun showProgress(dataState: DataState) {
+        if (dataState === DataState.LOADING) {
+            loadingBar.visibility = View.VISIBLE
+        } else {
+            loadingBar.visibility = View.GONE
         }
     }
 }
