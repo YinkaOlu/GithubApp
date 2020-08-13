@@ -24,7 +24,7 @@ class GithubRepositoryTest {
     private val testUser = GithubUser("test", "/path")
     private val testRepos = arrayListOf(
         GithubRepo("test1", updatedAt = "2020-08-10T15:08:32Z", stargazers = 1, forks = 2),
-        GithubRepo("test2", updatedAt = "2020-07-10T15:08:32Z", stargazers = 2, forks = 3)
+        GithubRepo("test2", updatedAt = "2020-06-10T15:08:32Z", stargazers = 2, forks = 3)
     )
 
     @get:Rule
