@@ -3,6 +3,7 @@ package com.yinkaolu.githubapp
 import com.yinkaolu.githubapp.data.repository.GithubRepository
 import com.yinkaolu.githubapp.viewmodel.GithubViewModel
 import org.junit.Test
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 
 class GithubViewModelTest {
@@ -11,22 +12,21 @@ class GithubViewModelTest {
         val repo = mock(GithubRepository::class.java)
         val viewmodel = GithubViewModel(repo)
 
-        viewmodel.loadUserData("test")
+        viewmodel.getUser("test")
 
-        verify(repo).loadUser(MockitoHelper.any())
-        verify(repo).loadUserRepo(MockitoHelper.any())
+        verify(repo).loadUser(MockitoHelper.any(), ArgumentMatchers.eq(true))
+        verify(repo).loadUserRepo(MockitoHelper.any(), ArgumentMatchers.eq(true))
     }
 
     @Test
-    fun testViewModelLoadSameDataOnce() {
+    fun testViewModelBlocksEmptyUsername() {
         val repo = mock(GithubRepository::class.java)
         val viewmodel = GithubViewModel(repo)
 
-        viewmodel.loadUserData("test")
-        viewmodel.loadUserData("test")
+        viewmodel.getUser("")
 
-        verify(repo, times(1)).loadUser(MockitoHelper.any())
-        verify(repo, times(1)).loadUserRepo(MockitoHelper.any())
+        verify(repo, never()).loadUser(MockitoHelper.any(), ArgumentMatchers.eq(true))
+        verify(repo, never()).loadUserRepo(MockitoHelper.any(), ArgumentMatchers.eq(true))
     }
 
     @Test
@@ -34,22 +34,21 @@ class GithubViewModelTest {
         val repo = mock(GithubRepository::class.java)
         val viewmodel = GithubViewModel(repo)
 
-        viewmodel.loadUserData("test")
-        viewmodel.loadUserData("test2")
+        viewmodel.getUser("test")
+        viewmodel.getUser("test2")
 
-        verify(repo, times(2)).loadUser(MockitoHelper.any())
-        verify(repo, times(2)).loadUserRepo(MockitoHelper.any())
+        verify(repo, times(2)).loadUser(MockitoHelper.any(), ArgumentMatchers.eq(true))
+        verify(repo, times(2)).loadUserRepo(MockitoHelper.any(), ArgumentMatchers.eq(true))
     }
 
     @Test
-    fun testViewModelReloadSameDataForced() {
+    fun testViewModelNotConsiderCacheOnFreshLoad() {
         val repo = mock(GithubRepository::class.java)
         val viewmodel = GithubViewModel(repo)
 
-        viewmodel.loadUserData("test")
-        viewmodel.loadUserData("test", true)
+        viewmodel.getUser("test", true)
 
-        verify(repo, times(2)).loadUser(MockitoHelper.any())
-        verify(repo, times(2)).loadUserRepo(MockitoHelper.any())
+        verify(repo).loadUser(MockitoHelper.any(), ArgumentMatchers.eq(false))
+        verify(repo).loadUserRepo(MockitoHelper.any(), ArgumentMatchers.eq(false))
     }
 }

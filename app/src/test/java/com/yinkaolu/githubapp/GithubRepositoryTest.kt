@@ -58,9 +58,11 @@ class GithubRepositoryTest {
 
         repo.loadUser("test")
         repo.currentUser.observeForever { user ->
-            Assert.assertEquals(testUser.name, user.name)
-            Assert.assertEquals(testUser.avatarURL, user.avatarURL)
-            latch.countDown()
+            user?.let { safeUser ->
+                Assert.assertEquals(testUser.name, safeUser.name)
+                Assert.assertEquals(testUser.avatarURL, safeUser.avatarURL)
+                latch.countDown()
+            }
         }
 
         latch.await(200, TimeUnit.MILLISECONDS)
@@ -116,18 +118,21 @@ class GithubRepositoryTest {
 
         repo.loadUserRepo("test")
         repo.currentRepoList.observeForever { repoList ->
-            Assert.assertEquals(2, repoList.size)
 
-            Assert.assertEquals(testRepos[0].name, repoList[0].name)
-            Assert.assertEquals(testRepos[0].forks, repoList[0].forks)
-            Assert.assertEquals(testRepos[0].stargazers, repoList[0].stargazers)
-            Assert.assertEquals(testRepos[0].description, repoList[0].description)
+            repoList?.let {safeList ->
+                Assert.assertEquals(2, safeList.size)
 
-            Assert.assertEquals(testRepos[1].name, repoList[1].name)
-            Assert.assertEquals(testRepos[1].forks, repoList[1].forks)
-            Assert.assertEquals(testRepos[1].stargazers, repoList[1].stargazers)
-            Assert.assertEquals(testRepos[1].description, repoList[1].description)
-            latch.countDown()
+                Assert.assertEquals(testRepos[0].name, safeList[0].name)
+                Assert.assertEquals(testRepos[0].forks, safeList[0].forks)
+                Assert.assertEquals(testRepos[0].stargazers, safeList[0].stargazers)
+                Assert.assertEquals(testRepos[0].description, safeList[0].description)
+
+                Assert.assertEquals(testRepos[1].name, safeList[1].name)
+                Assert.assertEquals(testRepos[1].forks, safeList[1].forks)
+                Assert.assertEquals(testRepos[1].stargazers, safeList[1].stargazers)
+                Assert.assertEquals(testRepos[1].description, safeList[1].description)
+                latch.countDown()
+            }
         }
 
         latch.await(200, TimeUnit.MILLISECONDS)
