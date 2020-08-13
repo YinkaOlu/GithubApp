@@ -7,7 +7,7 @@ import com.yinkaolu.githubapp.data.api.ClientCallback
 import com.yinkaolu.githubapp.data.api.GithubAPIClient
 import com.yinkaolu.githubapp.data.model.GithubRepo
 import com.yinkaolu.githubapp.data.model.GithubUser
-import com.yinkaolu.githubapp.data.repository.GithubRepository
+import com.yinkaolu.githubapp.data.repository.DefaultGithubRepository
 import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.Rule
@@ -33,7 +33,7 @@ class GithubRepositoryTest {
     @Test
     fun testLoadPlayerCallsCorrectAPI() {
         val mockClient = mock(GithubAPIClient::class.java)
-        val repo = GithubRepository(mockClient)
+        val repo = DefaultGithubRepository(mockClient)
 
         repo.loadUser("test")
 
@@ -46,7 +46,7 @@ class GithubRepositoryTest {
     @Test
     fun testLoadUserSaveData() {
         val mockClient = mock(GithubAPIClient::class.java)
-        val repo = GithubRepository(mockClient)
+        val repo = DefaultGithubRepository(mockClient)
 
         Mockito.`when`(
             mockClient.getUserDetails(MockitoHelper.any(), MockitoHelper.any())
@@ -69,7 +69,7 @@ class GithubRepositoryTest {
     @Test
     fun testLoadUserHandlesError() {
         val mockClient = mock(GithubAPIClient::class.java)
-        val repo = GithubRepository(mockClient)
+        val repo = DefaultGithubRepository(mockClient)
 
         Mockito.`when`(
             mockClient.getUserDetails(MockitoHelper.any(), MockitoHelper.any())
@@ -91,7 +91,7 @@ class GithubRepositoryTest {
     @Test
     fun testLoadRepoCallsCorrectAPI() {
         val mockClient = mock(GithubAPIClient::class.java)
-        val repo = GithubRepository(mockClient)
+        val repo = DefaultGithubRepository(mockClient)
 
         repo.loadUserRepo("test")
 
@@ -104,7 +104,7 @@ class GithubRepositoryTest {
     @Test
     fun testLoadRepoPassesCorrectAPI() {
         val mockClient = mock(GithubAPIClient::class.java)
-        val repo = GithubRepository(mockClient)
+        val repo = DefaultGithubRepository(mockClient)
 
         Mockito.`when`(
             mockClient.getUserRepo(MockitoHelper.any(), MockitoHelper.any())
@@ -136,7 +136,7 @@ class GithubRepositoryTest {
     @Test
     fun testLoadReposHandlesError() {
         val mockClient = mock(GithubAPIClient::class.java)
-        val repo = GithubRepository(mockClient)
+        val repo = DefaultGithubRepository(mockClient)
 
         Mockito.`when`(
             mockClient.getUserRepo(MockitoHelper.any(), MockitoHelper.any())
