@@ -1,6 +1,5 @@
 package com.yinkaolu.githubapp.data.api
 
-import android.util.Log
 import com.yinkaolu.githubapp.data.model.GithubRepo
 import com.yinkaolu.githubapp.data.model.GithubUser
 import okhttp3.OkHttpClient

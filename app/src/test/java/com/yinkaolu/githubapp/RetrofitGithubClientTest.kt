@@ -15,6 +15,7 @@ import org.mockito.Mockito.mock
 import retrofit2.Call
 import java.io.IOException
 import java.lang.RuntimeException
+import java.util.concurrent.TimeUnit
 
 
 class RetrofitGithubClientTest {
@@ -69,7 +70,7 @@ class RetrofitGithubClientTest {
             }
         })
 
-        latch.await()
+        latch.await(200, TimeUnit.MILLISECONDS)
     }
 
     @Test
@@ -96,7 +97,7 @@ class RetrofitGithubClientTest {
             }
         })
 
-        latch.await()
+        latch.await(200, TimeUnit.MILLISECONDS)
     }
 
     @Test
@@ -122,7 +123,7 @@ class RetrofitGithubClientTest {
             }
         })
 
-        latch.await()
+        latch.await(200, TimeUnit.MILLISECONDS)
     }
 
     @Test
@@ -148,7 +149,7 @@ class RetrofitGithubClientTest {
             }
         })
 
-        latch.await()
+        latch.await(200, TimeUnit.MILLISECONDS)
     }
 
     // ======= User Repos Test =======
@@ -186,7 +187,7 @@ class RetrofitGithubClientTest {
             }
         })
 
-        latch.await()
+        latch.await(200, TimeUnit.MILLISECONDS)
     }
 
     @Test
@@ -212,7 +213,7 @@ class RetrofitGithubClientTest {
             }
         })
 
-        latch.await()
+        latch.await(200, TimeUnit.MILLISECONDS)
     }
 
     @Test
@@ -236,7 +237,7 @@ class RetrofitGithubClientTest {
             }
         })
 
-        latch.await()
+        latch.await(200, TimeUnit.MILLISECONDS)
     }
 
     @Test
@@ -260,6 +261,6 @@ class RetrofitGithubClientTest {
             }
         })
 
-        latch.await()
+        latch.await(200, TimeUnit.MILLISECONDS)
     }
 }
