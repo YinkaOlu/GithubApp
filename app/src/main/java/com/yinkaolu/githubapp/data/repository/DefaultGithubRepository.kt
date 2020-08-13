@@ -11,12 +11,12 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient(
     override fun loadUser(userName: String) {
         apiClient.getUserDetails(userName, object : ClientCallback<GithubUser> {
             override fun onSuccess(payload: GithubUser) {
-                _currentUser.value = payload
-                _userApiError.value = null
+                _currentUser.postValue(payload)
+                _userApiError.postValue(null)
             }
 
             override fun onFailure(error: ApiError) {
-                _userApiError.value = error
+                _userApiError.postValue(error)
             }
 
         })
@@ -27,12 +27,12 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient(
         if (githubUserName !== null) {
             apiClient.getUserRepo(githubUserName, object : ClientCallback<List<GithubRepo>> {
                 override fun onSuccess(payload: List<GithubRepo>) {
-                    _currentRepoList.value = payload
-                    _repoApiError.value = null
+                    _currentRepoList.postValue(payload)
+                    _repoApiError.postValue(null)
                 }
 
                 override fun onFailure(error: ApiError) {
-                    _repoApiError.value = error
+                    _repoApiError.postValue(error)
                 }
 
             })

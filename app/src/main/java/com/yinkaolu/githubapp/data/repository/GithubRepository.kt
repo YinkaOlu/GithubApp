@@ -12,16 +12,16 @@ import com.yinkaolu.githubapp.data.model.GithubUser
 abstract class GithubRepository(apiClient: GithubAPIClient) {
     internal var apiClient: GithubAPIClient = apiClient
 
-    internal val _currentUser: MutableLiveData<GithubUser> = MutableLiveData()
+    protected val _currentUser: MutableLiveData<GithubUser> = MutableLiveData()
     val currentUser: LiveData<GithubUser> = _currentUser
 
-    internal val _currentRepoList: MutableLiveData<List<GithubRepo>> = MutableLiveData()
+    protected val _currentRepoList: MutableLiveData<List<GithubRepo>> = MutableLiveData()
     val currentRepoList: LiveData<List<GithubRepo>> = _currentRepoList
 
-    internal val _userApiError: MutableLiveData<ApiError?> = MutableLiveData()
+    protected val _userApiError: MutableLiveData<ApiError?> = MutableLiveData()
     val userApiError: LiveData<ApiError?> = _userApiError
 
-    internal val _repoApiError: MutableLiveData<ApiError?> = MutableLiveData()
+    protected val _repoApiError: MutableLiveData<ApiError?> = MutableLiveData()
     val repoApiError: LiveData<ApiError?> = _repoApiError
 
 
