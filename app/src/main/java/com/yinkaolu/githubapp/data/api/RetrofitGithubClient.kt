@@ -6,6 +6,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import kotlin.concurrent.thread
 
 class RetrofitGithubClient(api: GithubAPI? = null): GithubAPIClient {
     private var api: GithubAPI
@@ -24,37 +25,42 @@ class RetrofitGithubClient(api: GithubAPI? = null): GithubAPIClient {
     }
 
     override fun getUserDetails(userName: String, cb: ClientCallback<GithubUser>) {
-        try {
-            val response = api.getUser(userName).execute()
+        thread {
+            try {
+                val response = api.getUser(userName).execute()
 
-            if (!response.isSuccessful)
-                return cb.onFailure(ApiError(ApiErrorType.FAILED, "Call for user detail was not successful"))
+                if (!response.isSuccessful)
+                    return@thread cb.onFailure(ApiError(ApiErrorType.FAILED, "Call for user detail was not successful"))
 
-            val user = response.body()
-                ?: return cb.onFailure(ApiError(ApiErrorType.NOT_FOUND, "Response does not have a user"))
+                val user = response.body()
+                    ?: return@thread cb.onFailure(ApiError(ApiErrorType.NOT_FOUND, "Response does not have a user"))
 
-            cb.onSuccess(user)
-        } catch (ioe: IOException) {
-            cb.onFailure(ApiError(ApiErrorType.FAILED, "User detail call to server was unsuccessful"))
-        } catch (rte: RuntimeException) {
-            cb.onFailure(ApiError(ApiErrorType.FAILED, "Error occurred while trying to encode request or decode response"))
+                cb.onSuccess(user)
+            } catch (ioe: IOException) {
+                cb.onFailure(ApiError(ApiErrorType.FAILED, "User detail call to server was unsuccessful"))
+            } catch (rte: RuntimeException) {
+                cb.onFailure(ApiError(ApiErrorType.FAILED, "Error occurred while trying to encode request or decode response"))
+            }
         }
+
     }
 
     override fun getUserRepo(userName: String, cb: ClientCallback<List<GithubRepo>>) {
-        try {
-            val response = api.getUserRepo(userName).execute()
-            if (!response.isSuccessful)
-                return cb.onFailure(ApiError(ApiErrorType.FAILED, "Call for user repo detail was not successful"))
+        thread {
+            try {
+                val response = api.getUserRepo(userName).execute()
+                if (!response.isSuccessful)
+                    return@thread cb.onFailure(ApiError(ApiErrorType.FAILED, "Call for user repo detail was not successful"))
 
-            val repositoryDetails = response.body()
-                ?: return cb.onFailure(ApiError(ApiErrorType.NOT_FOUND, "Response does not have repository details"))
+                val repositoryDetails = response.body()
+                    ?: return@thread cb.onFailure(ApiError(ApiErrorType.NOT_FOUND, "Response does not have repository details"))
 
-            cb.onSuccess(repositoryDetails)
-        } catch (ioe: IOException) {
-            cb.onFailure(ApiError(ApiErrorType.FAILED, "User detail call to server was unsuccessful"))
-        } catch (rte: RuntimeException) {
-            cb.onFailure(ApiError(ApiErrorType.FAILED, "Error occurred while trying to encode request or decode response"))
+                cb.onSuccess(repositoryDetails)
+            } catch (ioe: IOException) {
+                cb.onFailure(ApiError(ApiErrorType.FAILED, "User detail call to server was unsuccessful"))
+            } catch (rte: RuntimeException) {
+                cb.onFailure(ApiError(ApiErrorType.FAILED, "Error occurred while trying to encode request or decode response"))
+            }
         }
     }
 }
