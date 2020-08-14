@@ -1,8 +1,6 @@
 package com.yinkaolu.githubapp.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.yinkaolu.githubapp.data.api.ApiError
 import com.yinkaolu.githubapp.data.model.GithubUser
@@ -30,7 +28,6 @@ class GithubViewModel(
          * and
          * 2. is a fresh download or not the currently presented user
          */
-
         if (inputUserName.isNotEmpty()) {
             repository.loadUser(inputUserName, !freshDownload)
             repository.loadUserRepo(inputUserName, !freshDownload)
