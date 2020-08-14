@@ -3,10 +3,10 @@ package com.yinkaolu.githubapp
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
-import com.yinkaolu.githubapp.data.api.ApiError
-import com.yinkaolu.githubapp.data.api.ApiErrorType
-import com.yinkaolu.githubapp.data.api.ClientCallback
-import com.yinkaolu.githubapp.data.api.RetrofitGithubClient
+import com.yinkaolu.githubapp.data.provider.ProviderError
+import com.yinkaolu.githubapp.data.provider.ProviderErrorType
+import com.yinkaolu.githubapp.data.provider.DataProviderCallback
+import com.yinkaolu.githubapp.data.provider.RetrofitDataProvider
 import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
 import okhttp3.mockwebserver.MockResponse
@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitGithubClientTest {
     lateinit var server: MockWebServer
-    lateinit var client: RetrofitGithubClient
+    lateinit var client: RetrofitDataProvider
 
     private val userJsonElement: JsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
     val testUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
@@ -40,7 +40,7 @@ class RetrofitGithubClientTest {
         server = MockWebServer()
         server.start()
 
-        client = RetrofitGithubClient.instance
+        client = RetrofitDataProvider.instance
         client.set(server.url("").toString())
 
         userResponse.setBody(GithubTestJson.testUserJsonString)
@@ -59,14 +59,14 @@ class RetrofitGithubClientTest {
     fun testUserDetailAccuracy() {
         server.enqueue(userResponse)
         val latch = CountDownLatch(1)
-        client.getUserDetails("test", object : ClientCallback<GithubUser> {
+        client.getUserDetails("test", object : DataProviderCallback<GithubUser> {
             override fun onSuccess(payload: GithubUser) {
                 assertEquals(testUser.name, payload.name)
                 assertEquals(testUser.avatarURL, payload.avatarURL)
                 latch.countDown()
             }
 
-            override fun onFailure(error: ApiError) {
+            override fun onFailure(error: ProviderError) {
                 assertTrue("User detail call should not fail", false)
                 latch.countDown()
             }
@@ -79,14 +79,14 @@ class RetrofitGithubClientTest {
     fun testUserDetailFailedCall() {
         server.enqueue(failedResponse)
         val latch = CountDownLatch(1)
-        client.getUserDetails("test", object : ClientCallback<GithubUser> {
+        client.getUserDetails("test", object : DataProviderCallback<GithubUser> {
             override fun onSuccess(payload: GithubUser) {
                 assertTrue("User detail call should not succeed", false)
                 latch.countDown()
             }
 
-            override fun onFailure(error: ApiError) {
-                assertEquals(ApiErrorType.FAILED, error.type)
+            override fun onFailure(error: ProviderError) {
+                assertEquals(ProviderErrorType.FAILED, error.type)
                 latch.countDown()
             }
         })
@@ -99,7 +99,7 @@ class RetrofitGithubClientTest {
     fun testUserRepoDetailAccuracy() {
         server.enqueue(reposResponse)
         val latch = CountDownLatch(1)
-        client.getUserRepo("test", object : ClientCallback<GithubRepos> {
+        client.getUserRepo("test", object : DataProviderCallback<GithubRepos> {
             override fun onSuccess(payload: GithubRepos) {
                 assertEquals(1, payload.size)
 
@@ -111,7 +111,7 @@ class RetrofitGithubClientTest {
                 latch.countDown()
             }
 
-            override fun onFailure(error: ApiError) {
+            override fun onFailure(error: ProviderError) {
                 assertTrue("User detail call should not fail", false)
                 latch.countDown()
             }
@@ -124,14 +124,14 @@ class RetrofitGithubClientTest {
     fun testHandleRepoCallFailure() {
         server.enqueue(failedResponse)
         val latch = CountDownLatch(1)
-        client.getUserRepo("test", object : ClientCallback<GithubRepos> {
+        client.getUserRepo("test", object : DataProviderCallback<GithubRepos> {
             override fun onSuccess(payload: GithubRepos) {
                 assertTrue("Repo call should fail", false)
                 latch.countDown()
             }
 
-            override fun onFailure(error: ApiError) {
-                assertEquals(ApiErrorType.FAILED, error.type)
+            override fun onFailure(error: ProviderError) {
+                assertEquals(ProviderErrorType.FAILED, error.type)
                 latch.countDown()
             }
         })

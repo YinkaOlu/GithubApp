@@ -2,7 +2,7 @@ package com.yinkaolu.githubapp.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.yinkaolu.githubapp.data.api.ApiError
+import com.yinkaolu.githubapp.data.provider.ProviderError
 import com.yinkaolu.githubapp.data.model.GithubUser
 import com.yinkaolu.githubapp.data.repository.DataState
 import com.yinkaolu.githubapp.data.repository.DefaultGithubRepository
@@ -15,9 +15,9 @@ class GithubViewModel(
     val user: LiveData<GithubUser?>? = repository.currentUser
     val repos = repository.currentRepoList
 
-    val userApiError: LiveData<ApiError?> = repository.userApiError
-    val repoApiError: LiveData<ApiError?> = repository.repoApiError
-    val state: LiveData<DataState> = repository.state
+    val userApiError: LiveData<ProviderError?> = repository.userError
+    val repoApiError: LiveData<ProviderError?> = repository.repositoryError
+    val state: LiveData<DataState> = repository.repositoryDataState
 
     private val searchHistory: ArrayList<String> = arrayListOf()
 

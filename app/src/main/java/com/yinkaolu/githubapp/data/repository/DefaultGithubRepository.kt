@@ -1,35 +1,36 @@
 package com.yinkaolu.githubapp.data.repository
 
 import androidx.lifecycle.LiveData
-import com.yinkaolu.githubapp.data.api.ApiError
-import com.yinkaolu.githubapp.data.api.ClientCallback
-import com.yinkaolu.githubapp.data.api.GithubAPIClient
-import com.yinkaolu.githubapp.data.api.RetrofitGithubClient
-import com.yinkaolu.githubapp.data.model.GithubRepo
+import com.yinkaolu.githubapp.data.provider.ProviderError
+import com.yinkaolu.githubapp.data.provider.DataProviderCallback
+import com.yinkaolu.githubapp.data.provider.GithubDataProvider
+import com.yinkaolu.githubapp.data.provider.RetrofitDataProvider
 import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
-import kotlin.concurrent.thread
 
-class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient.instance): GithubRepository(apiClient) {
+/**
+ * Default implementation of GithubRepository
+ */
+class DefaultGithubRepository(apiClient: GithubDataProvider = RetrofitDataProvider.instance): GithubRepository(apiClient) {
     private val userCache: HashMap<String, GithubUser> = hashMapOf()
     private val repoCache: HashMap<String, GithubRepos> = hashMapOf()
 
     override fun loadUser(userName: String, considerCache: Boolean): LiveData<GithubUser?> {
         if (considerCache && userCache[userName] !== null) {
-            _currentUser.postValue(userCache[userName])
+            loadedUser.postValue(userCache[userName])
         } else {
-            _state.postValue(DataState.LOADING)
-            apiClient.getUserDetails(userName, object : ClientCallback<GithubUser> {
+            state.postValue(DataState.LOADING)
+            apiClient.getUserDetails(userName, object : DataProviderCallback<GithubUser> {
                 override fun onSuccess(payload: GithubUser) {
-                    _currentUser.postValue(payload)
-                    _userApiError.postValue(null)
+                    loadedUser.postValue(payload)
+                    userApiCallError.postValue(null)
                     userCache[payload.name] = payload
-                    _state.postValue(DataState.LOADED)
+                    state.postValue(DataState.LOADED)
                 }
 
-                override fun onFailure(error: ApiError) {
-                    _userApiError.postValue(error)
-                    _state.postValue(DataState.FAILED)
+                override fun onFailure(error: ProviderError) {
+                    userApiCallError.postValue(error)
+                    state.postValue(DataState.FAILED)
                 }
 
             })
@@ -38,24 +39,24 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient.
     }
 
     override fun loadUserRepo(userName: String?, considerCache: Boolean): LiveData<GithubRepos?> {
-        val githubUserName = userName ?: _currentUser.value?.name
+        val githubUserName = userName ?: loadedUser.value?.name
         ?: throw IllegalArgumentException("user name must be provided if there is no currently loaded Github user data")
 
         if (considerCache && repoCache[githubUserName] !== null) {
-            _currentRepoList.postValue(repoCache[githubUserName])
+            loadedRepositories.postValue(repoCache[githubUserName])
         } else {
-            _state.postValue(DataState.LOADING)
-            apiClient.getUserRepo(githubUserName, object : ClientCallback<GithubRepos> {
+            state.postValue(DataState.LOADING)
+            apiClient.getUserRepo(githubUserName, object : DataProviderCallback<GithubRepos> {
                 override fun onSuccess(payload: GithubRepos) {
-                    _currentRepoList.postValue(payload)
-                    _repoApiError.postValue(null)
+                    loadedRepositories.postValue(payload)
+                    repositoryApiCallError.postValue(null)
                     repoCache[githubUserName] = payload
-                    _state.postValue(DataState.LOADED)
+                    state.postValue(DataState.LOADED)
                 }
 
-                override fun onFailure(error: ApiError) {
-                    _repoApiError.postValue(error)
-                    _state.postValue(DataState.FAILED)
+                override fun onFailure(error: ProviderError) {
+                    repositoryApiCallError.postValue(error)
+                    state.postValue(DataState.FAILED)
                 }
 
             })
@@ -64,8 +65,8 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient.
     }
 
     override fun clear(userName: String?) {
-        _currentUser.postValue(null)
-        _currentRepoList.postValue(null)
+        loadedUser.postValue(null)
+        loadedRepositories.postValue(null)
 
         if (!userName.isNullOrEmpty()) {
             userCache.remove(userName)
@@ -74,6 +75,6 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient.
             userCache.clear()
             repoCache.clear()
         }
-        _state.postValue(DataState.EMPTY)
+        state.postValue(DataState.EMPTY)
     }
 }

@@ -1,6 +1,5 @@
 package com.yinkaolu.githubapp.view
 
-import android.util.Log
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -14,7 +13,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.yinkaolu.githubapp.R
-import com.yinkaolu.githubapp.data.api.RetrofitGithubClient
+import com.yinkaolu.githubapp.data.provider.RetrofitDataProvider
 import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
 import com.yinkaolu.githubapp.view.fragment.repolist.RepoListFragment
@@ -49,7 +48,7 @@ class MainActivityTest {
         server.start()
 
         // Direct Client to Mock server
-        RetrofitGithubClient.instance.set(server.url("").toString())
+        RetrofitDataProvider.instance.set(server.url("").toString())
 
         userResponse.setBody(GithubTestJson.testUserJsonString)
         reposResponse.setBody(GithubTestJson.testReposJsonString)

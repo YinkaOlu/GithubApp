@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.bumptech.glide.Glide
 import com.yinkaolu.githubapp.R
-import com.yinkaolu.githubapp.data.api.ApiError
+import com.yinkaolu.githubapp.data.provider.ProviderError
 import com.yinkaolu.githubapp.data.repository.DataState
 import com.yinkaolu.githubapp.view.fragment.error.ErrorFragment
 import com.yinkaolu.githubapp.view.fragment.repolist.RepoListFragment
@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleError(error: ApiError?) {
+    private fun handleError(error: ProviderError?) {
         error?.let {
             userName.text = ""
             Glide.with(this).load(getString(R.string.error_image)).into(userAvatar)

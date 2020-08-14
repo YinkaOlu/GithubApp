@@ -1,6 +1,5 @@
-package com.yinkaolu.githubapp.data.api
+package com.yinkaolu.githubapp.data.provider
 
-import com.yinkaolu.githubapp.data.model.GithubRepo
 import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
 import retrofit2.Call

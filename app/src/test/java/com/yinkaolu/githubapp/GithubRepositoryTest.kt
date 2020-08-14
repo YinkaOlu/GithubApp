@@ -1,10 +1,10 @@
 package com.yinkaolu.githubapp
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.yinkaolu.githubapp.data.api.ApiError
-import com.yinkaolu.githubapp.data.api.ApiErrorType
-import com.yinkaolu.githubapp.data.api.ClientCallback
-import com.yinkaolu.githubapp.data.api.GithubAPIClient
+import com.yinkaolu.githubapp.data.provider.ProviderError
+import com.yinkaolu.githubapp.data.provider.ProviderErrorType
+import com.yinkaolu.githubapp.data.provider.DataProviderCallback
+import com.yinkaolu.githubapp.data.provider.GithubDataProvider
 import com.yinkaolu.githubapp.data.model.GithubRepo
 import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
@@ -38,7 +38,7 @@ class GithubRepositoryTest {
 
     @Test
     fun testLoadPlayerCallsCorrectAPI() {
-        val mockClient = mock(GithubAPIClient::class.java)
+        val mockClient = mock(GithubDataProvider::class.java)
         val repo = DefaultGithubRepository(mockClient)
 
         repo.loadUser("test")
@@ -51,13 +51,13 @@ class GithubRepositoryTest {
 
     @Test
     fun testLoadUserSaveData() {
-        val mockClient = mock(GithubAPIClient::class.java)
+        val mockClient = mock(GithubDataProvider::class.java)
         val repo = DefaultGithubRepository(mockClient)
 
         Mockito.`when`(
             mockClient.getUserDetails(MockitoHelper.any(), MockitoHelper.any())
         ).thenAnswer {
-            (it.arguments[1] as ClientCallback<GithubUser>).onSuccess(testUser)
+            (it.arguments[1] as DataProviderCallback<GithubUser>).onSuccess(testUser)
         }
 
         val latch = CountDownLatch(1)
@@ -76,20 +76,20 @@ class GithubRepositoryTest {
 
     @Test
     fun testLoadUserHandlesError() {
-        val mockClient = mock(GithubAPIClient::class.java)
+        val mockClient = mock(GithubDataProvider::class.java)
         val repo = DefaultGithubRepository(mockClient)
 
         Mockito.`when`(
             mockClient.getUserDetails(MockitoHelper.any(), MockitoHelper.any())
         ).thenAnswer {
-            (it.arguments[1] as ClientCallback<GithubUser>).onFailure(ApiError(ApiErrorType.FAILED))
+            (it.arguments[1] as DataProviderCallback<GithubUser>).onFailure(ProviderError(ProviderErrorType.FAILED))
         }
 
         val latch = CountDownLatch(1)
 
         repo.loadUser("test")
-        repo.userApiError.observeForever { error ->
-            Assert.assertEquals(ApiErrorType.FAILED, error?.type)
+        repo.userError.observeForever { error ->
+            Assert.assertEquals(ProviderErrorType.FAILED, error?.type)
             latch.countDown()
         }
 
@@ -98,7 +98,7 @@ class GithubRepositoryTest {
 
     @Test
     fun testLoadRepoCallsCorrectAPI() {
-        val mockClient = mock(GithubAPIClient::class.java)
+        val mockClient = mock(GithubDataProvider::class.java)
         val repo = DefaultGithubRepository(mockClient)
 
         repo.loadUserRepo("test")
@@ -111,13 +111,13 @@ class GithubRepositoryTest {
 
     @Test
     fun testLoadRepoPassesCorrectAPI() {
-        val mockClient = mock(GithubAPIClient::class.java)
+        val mockClient = mock(GithubDataProvider::class.java)
         val repo = DefaultGithubRepository(mockClient)
 
         Mockito.`when`(
             mockClient.getUserRepo(MockitoHelper.any(), MockitoHelper.any())
         ).thenAnswer {
-            (it.arguments[1] as ClientCallback<List<GithubRepo>>).onSuccess(testRepos)
+            (it.arguments[1] as DataProviderCallback<List<GithubRepo>>).onSuccess(testRepos)
         }
 
         val latch = CountDownLatch(1)
@@ -146,20 +146,20 @@ class GithubRepositoryTest {
 
     @Test
     fun testLoadReposHandlesError() {
-        val mockClient = mock(GithubAPIClient::class.java)
+        val mockClient = mock(GithubDataProvider::class.java)
         val repo = DefaultGithubRepository(mockClient)
 
         Mockito.`when`(
             mockClient.getUserRepo(MockitoHelper.any(), MockitoHelper.any())
         ).thenAnswer {
-            (it.arguments[1] as ClientCallback<List<GithubRepo>>).onFailure(ApiError(ApiErrorType.FAILED))
+            (it.arguments[1] as DataProviderCallback<List<GithubRepo>>).onFailure(ProviderError(ProviderErrorType.FAILED))
         }
 
         val latch = CountDownLatch(1)
 
         repo.loadUserRepo("test")
-        repo.repoApiError.observeForever { error ->
-            Assert.assertEquals(ApiErrorType.FAILED, error?.type)
+        repo.repositoryError.observeForever { error ->
+            Assert.assertEquals(ProviderErrorType.FAILED, error?.type)
             latch.countDown()
         }
 
