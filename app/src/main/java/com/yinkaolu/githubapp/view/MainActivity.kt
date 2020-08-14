@@ -3,6 +3,8 @@ package com.yinkaolu.githubapp.view
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.bumptech.glide.Glide
@@ -16,11 +18,18 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
     lateinit var viewModel: GithubViewModel
+    private lateinit var quickFadeAnimation: Animation
+    private lateinit var medFadeAnimation: Animation
+    private lateinit var longFadeAnimation: Animation
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         viewModel = ViewModelProvider(this).get(GithubViewModel::class.java)
+        quickFadeAnimation = AnimationUtils.loadAnimation(this, R.anim.quick_fade_in)
+        medFadeAnimation = AnimationUtils.loadAnimation(this, R.anim.med_fade_in)
+        longFadeAnimation = AnimationUtils.loadAnimation(this, R.anim.long_fade_in)
 
         observerUserData()
         searchBtn.setOnClickListener {
@@ -31,8 +40,11 @@ class MainActivity : AppCompatActivity() {
     private fun observerUserData() {
         viewModel.user?.observe(this) { user ->
             user?.let { safeUser ->
+                userName.startAnimation(medFadeAnimation)
                 userName.text = safeUser.name
                 Glide.with(this).load(safeUser.avatarURL).into(userAvatar)
+                userAvatar.startAnimation(quickFadeAnimation)
+
             }
         }
 
@@ -42,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.listContainer, repoFrag)
                     .commit()
+                listContainer.startAnimation(longFadeAnimation)
             }
         }
 
