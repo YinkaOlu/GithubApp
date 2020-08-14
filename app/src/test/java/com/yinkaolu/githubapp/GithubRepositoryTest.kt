@@ -21,10 +21,14 @@ import org.mockito.Mockito.verify
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-
+/**
+ * Tests to cover GithubRepository handling of data from Data Provider and input data
+ */
 class GithubRepositoryTest {
     private val testUser = GithubUser("test", "/path")
     private val testRepos = GithubRepos()
+    private val mockClient = mock(GithubDataProvider::class.java)
+    private val githubRepository = DefaultGithubRepository(mockClient)
 
     @Before
     fun setUp() {
@@ -37,11 +41,8 @@ class GithubRepositoryTest {
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Test
-    fun testLoadPlayerCallsCorrectAPI() {
-        val mockClient = mock(GithubDataProvider::class.java)
-        val repo = DefaultGithubRepository(mockClient)
-
-        repo.loadUser("test")
+    fun testCorrectApiCall_loadUser() {
+        githubRepository.loadUser("test")
 
         val captor = ArgumentCaptor.forClass(String::class.java)
         // Verify repository is passing the correct user name to data source
@@ -50,10 +51,7 @@ class GithubRepositoryTest {
     }
 
     @Test
-    fun testLoadUserSaveData() {
-        val mockClient = mock(GithubDataProvider::class.java)
-        val repo = DefaultGithubRepository(mockClient)
-
+    fun testDataSaved_loadUser() {
         Mockito.`when`(
             mockClient.getUserDetails(MockitoHelper.any(), MockitoHelper.any())
         ).thenAnswer {
@@ -62,8 +60,8 @@ class GithubRepositoryTest {
 
         val latch = CountDownLatch(1)
 
-        repo.loadUser("test")
-        repo.currentUser.observeForever { user ->
+        githubRepository.loadUser("test")
+        githubRepository.currentUser.observeForever { user ->
             user?.let { safeUser ->
                 Assert.assertEquals(testUser.name, safeUser.name)
                 Assert.assertEquals(testUser.avatarURL, safeUser.avatarURL)
@@ -75,10 +73,7 @@ class GithubRepositoryTest {
     }
 
     @Test
-    fun testLoadUserHandlesError() {
-        val mockClient = mock(GithubDataProvider::class.java)
-        val repo = DefaultGithubRepository(mockClient)
-
+    fun testRepositoryHandlesError_loadUser() {
         Mockito.`when`(
             mockClient.getUserDetails(MockitoHelper.any(), MockitoHelper.any())
         ).thenAnswer {
@@ -87,8 +82,8 @@ class GithubRepositoryTest {
 
         val latch = CountDownLatch(1)
 
-        repo.loadUser("test")
-        repo.userError.observeForever { error ->
+        githubRepository.loadUser("test")
+        githubRepository.userError.observeForever { error ->
             Assert.assertEquals(ProviderErrorType.FAILED, error?.type)
             latch.countDown()
         }
@@ -97,11 +92,8 @@ class GithubRepositoryTest {
     }
 
     @Test
-    fun testLoadRepoCallsCorrectAPI() {
-        val mockClient = mock(GithubDataProvider::class.java)
-        val repo = DefaultGithubRepository(mockClient)
-
-        repo.loadUserRepo("test")
+    fun testCorrectApiCall_loadUserRepo() {
+        githubRepository.loadUserRepo("test")
 
         val captor = ArgumentCaptor.forClass(String::class.java)
         // Verify repository is passing the correct user name to data source
@@ -110,10 +102,7 @@ class GithubRepositoryTest {
     }
 
     @Test
-    fun testLoadRepoPassesCorrectAPI() {
-        val mockClient = mock(GithubDataProvider::class.java)
-        val repo = DefaultGithubRepository(mockClient)
-
+    fun testDataSaved_loadUserRepo() {
         Mockito.`when`(
             mockClient.getUserRepo(MockitoHelper.any(), MockitoHelper.any())
         ).thenAnswer {
@@ -122,8 +111,8 @@ class GithubRepositoryTest {
 
         val latch = CountDownLatch(1)
 
-        repo.loadUserRepo("test")
-        repo.currentRepoList.observeForever { repoList ->
+        githubRepository.loadUserRepo("test")
+        githubRepository.currentRepoList.observeForever { repoList ->
 
             repoList?.let {safeList ->
                 Assert.assertEquals(2, safeList.size)
@@ -145,11 +134,8 @@ class GithubRepositoryTest {
     }
 
     @Test
-    fun testLoadReposHandlesError() {
-        val mockClient = mock(GithubDataProvider::class.java)
-        val repo = DefaultGithubRepository(mockClient)
-
-        Mockito.`when`(
+    fun testRepositoryHandlesError_loadUserRepo() {
+         Mockito.`when`(
             mockClient.getUserRepo(MockitoHelper.any(), MockitoHelper.any())
         ).thenAnswer {
             (it.arguments[1] as DataProviderCallback<List<GithubRepo>>).onFailure(ProviderError(ProviderErrorType.FAILED))
@@ -157,8 +143,8 @@ class GithubRepositoryTest {
 
         val latch = CountDownLatch(1)
 
-        repo.loadUserRepo("test")
-        repo.repositoryError.observeForever { error ->
+        githubRepository.loadUserRepo("test")
+        githubRepository.repositoryError.observeForever { error ->
             Assert.assertEquals(ProviderErrorType.FAILED, error?.type)
             latch.countDown()
         }

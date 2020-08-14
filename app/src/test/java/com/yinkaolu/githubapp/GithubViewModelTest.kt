@@ -6,9 +6,12 @@ import org.junit.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 
+/**
+ * Tests to cover GithubViewModel behaviour with repository and inputs
+ */
 class GithubViewModelTest {
     @Test
-    fun testViewModelLoadData() {
+    fun testCorrectRepositoryCalled_getUser_singleInput() {
         val repo = mock(GithubRepository::class.java)
         val viewmodel = GithubViewModel(repo)
 
@@ -19,7 +22,7 @@ class GithubViewModelTest {
     }
 
     @Test
-    fun testViewModelBlocksEmptyUsername() {
+    fun testCorrectRepositoryCalled_getUser_emptyInput() {
         val repo = mock(GithubRepository::class.java)
         val viewmodel = GithubViewModel(repo)
 
@@ -30,7 +33,7 @@ class GithubViewModelTest {
     }
 
     @Test
-    fun testViewModelLoadsNewData() {
+    fun testCorrectRepositoryCalled_getUser_twoDifferentInputs() {
         val repo = mock(GithubRepository::class.java)
         val viewmodel = GithubViewModel(repo)
 
@@ -42,7 +45,7 @@ class GithubViewModelTest {
     }
 
     @Test
-    fun testViewModelNotConsiderCacheOnFreshLoad() {
+    fun testCorrectRepositoryCalled_getUser_singleInput_fresh() {
         val repo = mock(GithubRepository::class.java)
         val viewmodel = GithubViewModel(repo)
 

@@ -20,10 +20,12 @@ import java.net.HttpURLConnection
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
-
-class RetrofitGithubClientTest {
-    lateinit var server: MockWebServer
-    lateinit var client: RetrofitDataProvider
+/**
+ * Tests to cover default Retrofit GithubDataProvider behaviour with API inputs.
+ */
+class RetrofitGithubDataProviderTest {
+    private lateinit var server: MockWebServer
+    private lateinit var client: RetrofitDataProvider
 
     private val userJsonElement: JsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
     val testUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
@@ -56,7 +58,7 @@ class RetrofitGithubClientTest {
 
     // ======= User detail Test =======
     @Test
-    fun testUserDetailAccuracy() {
+    fun testDataTransfer_getUserDetails_successful() {
         server.enqueue(userResponse)
         val latch = CountDownLatch(1)
         client.getUserDetails("test", object : DataProviderCallback<GithubUser> {
@@ -76,7 +78,7 @@ class RetrofitGithubClientTest {
     }
 
     @Test
-    fun testUserDetailFailedCall() {
+    fun testDataTransfer_getUserDetails_failed() {
         server.enqueue(failedResponse)
         val latch = CountDownLatch(1)
         client.getUserDetails("test", object : DataProviderCallback<GithubUser> {
@@ -96,7 +98,7 @@ class RetrofitGithubClientTest {
 
     // ======= User Repos Test =======
     @Test
-    fun testUserRepoDetailAccuracy() {
+    fun testDataTransfer_getUserRepo_successful() {
         server.enqueue(reposResponse)
         val latch = CountDownLatch(1)
         client.getUserRepo("test", object : DataProviderCallback<GithubRepos> {
@@ -121,7 +123,7 @@ class RetrofitGithubClientTest {
     }
 
     @Test
-    fun testHandleRepoCallFailure() {
+    fun testDataTransfer_getUserRepo_failure() {
         server.enqueue(failedResponse)
         val latch = CountDownLatch(1)
         client.getUserRepo("test", object : DataProviderCallback<GithubRepos> {

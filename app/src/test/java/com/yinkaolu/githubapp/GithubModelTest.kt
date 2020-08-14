@@ -8,10 +8,12 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.util.*
 
-
+/**
+ * Unit tests to check mappings from expected json data to Models
+ */
 class GithubModelTest {
     @Test
-    fun testUserModelConversion() {
+    fun testConversation_GithubUser() {
         val userJsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
         val githubUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
 
@@ -20,7 +22,7 @@ class GithubModelTest {
     }
 
     @Test
-    fun testRepoModelConversion() {
+    fun testConversation_GithubRepo() {
         val repoJsonElement = JsonParser().parse(GithubTestJson.testRepoJsonString)
         val githubRepo: GithubRepo = Gson().fromJson(repoJsonElement, GithubRepo::class.java)
 
