@@ -1,8 +1,10 @@
 package com.yinkaolu.githubapp
 
+import android.content.Context
+import android.os.Build
+import androidx.test.core.app.ApplicationProvider
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonParser
+import com.yinkaolu.githubapp.data.GithubSampleJson
 import com.yinkaolu.githubapp.data.provider.ProviderError
 import com.yinkaolu.githubapp.data.provider.ProviderErrorType
 import com.yinkaolu.githubapp.data.provider.DataProviderCallback
@@ -16,6 +18,9 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
+import org.robolectric.annotation.Config
 import java.net.HttpURLConnection
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -23,6 +28,8 @@ import java.util.concurrent.TimeUnit
 /**
  * Tests to cover default Retrofit GithubDataProvider behaviour with API inputs.
  */
+@RunWith(RobolectricTestRunner::class)
+@Config(sdk = [Build.VERSION_CODES.O_MR1])
 class RetrofitGithubDataProviderTest {
     private lateinit var server: MockWebServer
     private lateinit var client: RetrofitDataProvider
@@ -34,22 +41,24 @@ class RetrofitGithubDataProviderTest {
     private val userResponse = MockResponse()
     private val reposResponse = MockResponse()
     private val failedResponse = MockResponse()
+    lateinit var ctx: Context
 
     @Before
     fun setUp() {
+        ctx = ApplicationProvider.getApplicationContext()
         server = MockWebServer()
         server.start()
 
         client = RetrofitDataProvider.instance
         client.set(server.url("").toString())
 
-        userResponse.setBody(GithubTestJson.getUserJsonString())
-        reposResponse.setBody(GithubTestJson.getRepoJsonString())
+        userResponse.setBody(GithubSampleJson.getUserJsonString(ctx))
+        reposResponse.setBody(GithubSampleJson.getRepoJsonString(ctx))
 
         failedResponse.setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
 
-        testUser = Gson().fromJson(GithubTestJson.getUserJson(), GithubUser::class.java)
-        val test = GithubTestJson.getReposJson()
+        testUser = Gson().fromJson(GithubSampleJson.getUserJson(ctx), GithubUser::class.java)
+        val test = GithubSampleJson.getReposJson(ctx)
         testRepos = Gson().fromJson(test, GithubRepos::class.java)
     }
 

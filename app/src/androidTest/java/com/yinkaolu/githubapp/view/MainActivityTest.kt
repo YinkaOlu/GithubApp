@@ -1,5 +1,6 @@
 package com.yinkaolu.githubapp.view
 
+import android.content.Context
 import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -10,9 +11,8 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.rule.ActivityTestRule
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonParser
 import com.yinkaolu.githubapp.R
+import com.yinkaolu.githubapp.data.GithubSampleJson
 import com.yinkaolu.githubapp.data.provider.RetrofitDataProvider
 import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
@@ -29,11 +29,9 @@ import java.net.HttpURLConnection
 @RunWith(AndroidJUnit4::class)
 class MainActivityTest {
     lateinit var server: MockWebServer
-    private val userJsonElement: JsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
-    private val testUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
+    private lateinit var testUser: GithubUser
 
-    private val reposJsonElement: JsonElement = JsonParser().parse(GithubTestJson.testReposJsonString)
-    private val testRepos: GithubRepos = Gson().fromJson(reposJsonElement, GithubRepos::class.java)
+    private lateinit var testRepos: GithubRepos
 
     private val userResponse = MockResponse()
     private val reposResponse = MockResponse()
@@ -44,16 +42,20 @@ class MainActivityTest {
 
     @Before
     fun setUp() {
+        val ctx: Context = activityRule.activity
         server = MockWebServer()
         server.start()
 
         // Direct Client to Mock server
         RetrofitDataProvider.instance.set(server.url("").toString())
 
-        userResponse.setBody(GithubTestJson.testUserJsonString)
-        reposResponse.setBody(GithubTestJson.testReposJsonString)
+        userResponse.setBody(GithubSampleJson.getUserJsonString(ctx))
+        reposResponse.setBody(GithubSampleJson.getRepoJsonString(ctx))
 
         failedResponse.setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+
+        testUser = Gson().fromJson(GithubSampleJson.getUserJson(ctx), GithubUser::class.java)
+        testRepos = Gson().fromJson(GithubSampleJson.getReposJson(ctx), GithubRepos::class.java)
     }
 
     @Test
