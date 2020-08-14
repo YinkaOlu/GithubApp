@@ -8,4 +8,5 @@
     <string name="stars_caption">Stars</string>
     <string name="forks_caption">Forks</string>
     <string name="error_message_tittle">Something went wrong!</string>
+    <string name="error_image">https://media1.tenor.com/images/beaf7e930689732cacc26baf48eb2dab/tenor.gif?itemid=3354662</string>
 </resources>

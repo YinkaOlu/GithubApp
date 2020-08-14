@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
 import com.yinkaolu.githubapp.R
 import com.yinkaolu.githubapp.data.api.ApiError
@@ -25,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.user?.observe(this){ user ->
             user?.let { safeUser ->
                 userName.text = safeUser.name
-                Picasso.get().load(safeUser.avatarURL).into(userAvatar);
+                Glide.with(this).load(safeUser.avatarURL).into(userAvatar)
             }
         }
 
@@ -38,13 +39,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.userApiError.observe(this) {
-            it?.let { safeError -> handleError(safeError)}
-        }
+        viewModel.userApiError.observe(this) {handleError(it)}
 
-        viewModel.repoApiError.observe(this) {
-            it?.let { safeError -> handleError(safeError)}
-        }
+        viewModel.repoApiError.observe(this) {handleError(it)}
 
         viewModel.state.observe(this) {
             showProgress(it)
@@ -63,10 +60,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun handleError(error: ApiError) {
-        val frag = ErrorFragment.instance(error.message)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.listContainer, frag)
-            .commit()
+    private fun handleError(error: ApiError?) {
+        error?.let {
+            userName.text = ""
+            Glide.with(this).load(getString(R.string.error_image)).into(userAvatar)
+            val frag = ErrorFragment.instance(it.message)
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.listContainer, frag)
+                .commit()
+        }
     }
 }

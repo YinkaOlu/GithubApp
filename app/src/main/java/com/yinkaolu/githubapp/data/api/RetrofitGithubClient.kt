@@ -57,9 +57,11 @@ class RetrofitGithubClient(api: GithubAPI? = null): GithubAPIClient {
 
                 cb.onSuccess(repositoryDetails)
             } catch (ioe: IOException) {
-                cb.onFailure(ApiError(ApiErrorType.FAILED, "User detail call to server was unsuccessful"))
+                cb.onFailure(ApiError(ApiErrorType.FAILED,
+                    "User detail call to server was unsuccessful\n${ioe.message}"))
             } catch (rte: RuntimeException) {
-                cb.onFailure(ApiError(ApiErrorType.FAILED, "Error occurred while trying to encode request or decode response"))
+                cb.onFailure(ApiError(ApiErrorType.FAILED,
+                    "Error occurred while trying to encode request or decode response\n${rte.message}"))
             }
         }
     }
