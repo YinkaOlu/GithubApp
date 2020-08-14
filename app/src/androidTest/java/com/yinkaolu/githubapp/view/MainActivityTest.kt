@@ -57,7 +57,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun testLoadingData() {
+    fun testView_loadingState() {
         //Enter search test
         enterSearchText("octocat")
         // Check progress views are showing
@@ -65,7 +65,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun testDataLoaded() {
+    fun testView_loadedState() {
         server.enqueue(userResponse)
         server.enqueue(reposResponse)
 
@@ -77,7 +77,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun testDataFailedToLoad() {
+    fun testView_failedState() {
         server.enqueue(failedResponse)
 
         //Enter search test
