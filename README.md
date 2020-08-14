@@ -32,3 +32,16 @@ List of Github Repository data from the MainActivity is passed to this fragment 
 
 #### Error
 Error information is passed from the MainActivity to this fragment. This fragment is responsible for presenting the error information to the user.
+
+## Screenshots
+### Entry Screen
+<img src="/screenshots/1.png" width="40%">
+
+### Search Entry
+<img src="/screenshots/2.png" width="40%">
+
+### Post search
+<img src="/screenshots/3.png" width="40%">
+
+### Repo Details
+<img src="/screenshots/4.png" width="40%">
