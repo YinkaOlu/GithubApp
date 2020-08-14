@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
+import com.squareup.picasso.Picasso
 import com.yinkaolu.githubapp.R
 import com.yinkaolu.githubapp.data.repository.DataState
 import com.yinkaolu.githubapp.view.fragment.repolist.RepoListFragment
@@ -22,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         viewModel.user?.observe(this){ user ->
             user?.let { safeUser ->
                 userName.text = safeUser.name
+                Picasso.get().load(safeUser.avatarURL).into(userAvatar);
             }
         }
 
