@@ -43,7 +43,7 @@ class RepoListFragment : Fragment(), RepoListItemListener {
 
     companion object {
         private const val REPO_ARGS_KEY = "REPO_ARGS_KEY"
-        private val dateStringFormat = SimpleDateFormat("MM dd, yyyy HH:mm:ss", Locale.CANADA)
+        val dateStringFormat = SimpleDateFormat("MM dd, yyyy HH:mm:ss", Locale.CANADA)
         fun instance(repos: GithubRepos): RepoListFragment {
             val frag =
                 RepoListFragment()

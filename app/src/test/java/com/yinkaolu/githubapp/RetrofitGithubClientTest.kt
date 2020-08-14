@@ -1,6 +1,7 @@
 package com.yinkaolu.githubapp
 
 import com.google.gson.Gson
+import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.yinkaolu.githubapp.data.api.ApiError
 import com.yinkaolu.githubapp.data.api.ApiErrorType
@@ -19,19 +20,20 @@ import java.net.HttpURLConnection
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
 
+
 class RetrofitGithubClientTest {
     lateinit var server: MockWebServer
     lateinit var client: RetrofitGithubClient
 
-    val userJsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
+    private val userJsonElement: JsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
     val testUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
 
-    val reposJsonElement = JsonParser().parse(GithubTestJson.testReposJsonString)
+    private val reposJsonElement: JsonElement = JsonParser().parse(GithubTestJson.testReposJsonString)
     val testRepos: GithubRepos = Gson().fromJson(reposJsonElement, GithubRepos::class.java)
 
-    val userResponse = MockResponse()
-    val reposResponse = MockResponse()
-    val failedResponse = MockResponse()
+    private val userResponse = MockResponse()
+    private val reposResponse = MockResponse()
+    private val failedResponse = MockResponse()
 
     @Before
     fun setUp() {
