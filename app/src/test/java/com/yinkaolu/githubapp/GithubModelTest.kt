@@ -6,6 +6,7 @@ import com.yinkaolu.githubapp.data.model.GithubRepo
 import com.yinkaolu.githubapp.data.model.GithubUser
 import org.junit.Test
 import org.junit.Assert.*
+import java.util.*
 
 
 class GithubModelTest {
@@ -34,5 +35,12 @@ class GithubModelTest {
         assertEquals( "2017-08-14T08:08:10Z", githubUser.updatedAt)
         assertEquals(1421, githubUser.stargazers)
         assertEquals(1176, githubUser.forks)
+
+        val cal = Calendar.getInstance()
+        cal.time = githubUser.updatedDate
+
+        assertEquals(2017, cal.get(Calendar.YEAR))
+        assertEquals(7, cal.get(Calendar.MONTH))
+        assertEquals(14, cal.get(Calendar.DAY_OF_MONTH))
     }
 }

@@ -3,6 +3,8 @@ package com.yinkaolu.githubapp.data.model
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class GithubRepo(
@@ -20,8 +22,12 @@ class GithubRepo(
         parcel.readString() ?: "",
         parcel.readInt(),
         parcel.readInt()
-    ) {
-    }
+    )
+    val updatedDate: Date?
+        get() {
+            var format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.CANADA)
+            return format.parse(updatedAt)
+        }
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeString(name)

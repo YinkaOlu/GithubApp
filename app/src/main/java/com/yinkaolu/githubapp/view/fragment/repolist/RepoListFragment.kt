@@ -12,6 +12,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yinkaolu.githubapp.R
 import com.yinkaolu.githubapp.data.model.GithubRepo
 import java.lang.IllegalArgumentException
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RepoListFragment : Fragment(), RepoListItemListener {
     override fun onCreateView(
@@ -35,7 +41,8 @@ class RepoListFragment : Fragment(), RepoListItemListener {
     }
 
     companion object {
-        const val REPO_ARGS_KEY = "REPO_ARGS_KEY"
+        private const val REPO_ARGS_KEY = "REPO_ARGS_KEY"
+        private val dateStringFormat = SimpleDateFormat("MM dd, yyyy HH:mm:ss", Locale.CANADA)
         fun instance(repos: ArrayList<GithubRepo>): RepoListFragment {
             val frag =
                 RepoListFragment()
@@ -53,7 +60,10 @@ class RepoListFragment : Fragment(), RepoListItemListener {
         // Add repo details
         bottomSheetView.findViewById<TextView>(R.id.repoForks).text = "${repo.forks}"
         bottomSheetView.findViewById<TextView>(R.id.repoStars).text = "${repo.stargazers}"
-        bottomSheetView.findViewById<TextView>(R.id.repoLastUpdated).text = repo.updatedAt
+
+        repo.updatedDate?.let {
+            bottomSheetView.findViewById<TextView>(R.id.repoLastUpdated).text = dateStringFormat.format(it)
+        }
 
         repoBottomSheet.setContentView(bottomSheetView)
         repoBottomSheet.show()

@@ -24,13 +24,13 @@ class RetrofitGithubClient(api: GithubAPI? = null): GithubAPIClient {
         }
     }
 
-    override fun getUserDetails(userName: String, cb: ClientCallback<GithubUser>) {
+    override fun getUserDetails(userID: String, cb: ClientCallback<GithubUser>) {
         thread {
             try {
-                val response = api.getUser(userName).execute()
+                val response = api.getUser(userID).execute()
 
                 if (!response.isSuccessful)
-                    return@thread cb.onFailure(ApiError(ApiErrorType.FAILED, "Call for user detail was not successful"))
+                    return@thread cb.onFailure(ApiError(ApiErrorType.FAILED, "Call for user detail was not successful.\n${response.message()}"))
 
                 val user = response.body()
                     ?: return@thread cb.onFailure(ApiError(ApiErrorType.NOT_FOUND, "Response does not have a user"))
@@ -50,7 +50,7 @@ class RetrofitGithubClient(api: GithubAPI? = null): GithubAPIClient {
             try {
                 val response = api.getUserRepo(userName).execute()
                 if (!response.isSuccessful)
-                    return@thread cb.onFailure(ApiError(ApiErrorType.FAILED, "Call for user repo detail was not successful"))
+                    return@thread cb.onFailure(ApiError(ApiErrorType.FAILED, "Call for user repo detail was not successful.\n${response.message()}"))
 
                 val repositoryDetails = response.body()
                     ?: return@thread cb.onFailure(ApiError(ApiErrorType.NOT_FOUND, "Response does not have repository details"))
@@ -58,10 +58,10 @@ class RetrofitGithubClient(api: GithubAPI? = null): GithubAPIClient {
                 cb.onSuccess(repositoryDetails)
             } catch (ioe: IOException) {
                 cb.onFailure(ApiError(ApiErrorType.FAILED,
-                    "User detail call to server was unsuccessful\n${ioe.message}"))
+                    "User detail call to server was unsuccessful.\n${ioe.message}"))
             } catch (rte: RuntimeException) {
                 cb.onFailure(ApiError(ApiErrorType.FAILED,
-                    "Error occurred while trying to encode request or decode response\n${rte.message}"))
+                    "Error occurred while trying to encode request or decode response.\n${rte.message}"))
             }
         }
     }

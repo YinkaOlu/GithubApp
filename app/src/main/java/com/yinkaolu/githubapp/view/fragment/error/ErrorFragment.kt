@@ -1,4 +1,4 @@
-package com.yinkaolu.githubapp.view.fragment.repolist
+package com.yinkaolu.githubapp.view.fragment.error
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

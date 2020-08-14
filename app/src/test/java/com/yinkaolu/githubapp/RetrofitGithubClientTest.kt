@@ -20,9 +20,9 @@ import java.util.concurrent.TimeUnit
 
 class RetrofitGithubClientTest {
     private lateinit var testUser: GithubUser
-    private lateinit var testRepos: List<GithubRepo>
+    private lateinit var testRepos: ArrayList<GithubRepo>
     private lateinit var mockUserCall: Call<GithubUser>
-    private lateinit var mockRepoCall: Call<List<GithubRepo>>
+    private lateinit var mockRepoCall: Call<ArrayList<GithubRepo>>
     private lateinit var api: GithubAPI
 
     @Before
@@ -33,7 +33,7 @@ class RetrofitGithubClientTest {
             GithubRepo("test2", updatedAt = "2020-07-10T15:08:32Z", stargazers = 2, forks = 3)
         )
         mockUserCall = mock(Call::class.java) as Call<GithubUser>
-        mockRepoCall = mock(Call::class.java) as Call<List<GithubRepo>>
+        mockRepoCall = mock(Call::class.java) as Call<ArrayList<GithubRepo>>
         api = mock(GithubAPI::class.java)
 
         Mockito.`when`(
@@ -164,8 +164,8 @@ class RetrofitGithubClientTest {
         val client = RetrofitGithubClient(api)
 
         val latch = CountDownLatch(1)
-        client.getUserRepo("test", object : ClientCallback<List<GithubRepo>> {
-            override fun onSuccess(payload: List<GithubRepo>) {
+        client.getUserRepo("test", object : ClientCallback<ArrayList<GithubRepo>> {
+            override fun onSuccess(payload: ArrayList<GithubRepo>) {
                 assertEquals(2, payload.size)
 
                 assertEquals(testRepos[0].name, payload[0].name)
@@ -192,7 +192,7 @@ class RetrofitGithubClientTest {
 
     @Test
     fun testHandleRepoCallFailure() {
-        val failedResponse = Response.error<List<GithubRepo>>(400, ResponseBody.create(null, ""))
+        val failedResponse = Response.error<ArrayList<GithubRepo>>(400, ResponseBody.create(null, ""))
 
         Mockito.`when`(
             mockRepoCall.execute()
@@ -201,8 +201,8 @@ class RetrofitGithubClientTest {
         val client = RetrofitGithubClient(api)
 
         val latch = CountDownLatch(1)
-        client.getUserRepo("test", object : ClientCallback<List<GithubRepo>> {
-            override fun onSuccess(payload: List<GithubRepo>) {
+        client.getUserRepo("test", object : ClientCallback<ArrayList<GithubRepo>> {
+            override fun onSuccess(payload: ArrayList<GithubRepo>) {
                 assertTrue("Repo call should fail", false)
                 latch.countDown()
             }
@@ -225,8 +225,8 @@ class RetrofitGithubClientTest {
         val client = RetrofitGithubClient(api)
 
         val latch = CountDownLatch(1)
-        client.getUserRepo("test", object : ClientCallback<List<GithubRepo>> {
-            override fun onSuccess(payload: List<GithubRepo>) {
+        client.getUserRepo("test", object : ClientCallback<ArrayList<GithubRepo>> {
+            override fun onSuccess(payload: ArrayList<GithubRepo>) {
                 assertTrue("Repo call should fail", false)
                 latch.countDown()
             }
@@ -249,8 +249,8 @@ class RetrofitGithubClientTest {
         val client = RetrofitGithubClient(api)
 
         val latch = CountDownLatch(1)
-        client.getUserRepo("test", object : ClientCallback<List<GithubRepo>> {
-            override fun onSuccess(payload: List<GithubRepo>) {
+        client.getUserRepo("test", object : ClientCallback<ArrayList<GithubRepo>> {
+            override fun onSuccess(payload: ArrayList<GithubRepo>) {
                 assertTrue("Repo call should fail", false)
                 latch.countDown()
             }

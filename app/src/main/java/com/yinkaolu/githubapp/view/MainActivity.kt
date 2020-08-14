@@ -6,11 +6,10 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.bumptech.glide.Glide
-import com.squareup.picasso.Picasso
 import com.yinkaolu.githubapp.R
 import com.yinkaolu.githubapp.data.api.ApiError
 import com.yinkaolu.githubapp.data.repository.DataState
-import com.yinkaolu.githubapp.view.fragment.repolist.ErrorFragment
+import com.yinkaolu.githubapp.view.fragment.error.ErrorFragment
 import com.yinkaolu.githubapp.view.fragment.repolist.RepoListFragment
 import com.yinkaolu.githubapp.viewmodel.GithubViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -23,15 +22,22 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(GithubViewModel::class.java)
 
-        viewModel.user?.observe(this){ user ->
+        observerUserData()
+        searchBtn.setOnClickListener {
+            viewModel.getUser(editSearch.text.toString())
+        }
+    }
+
+    private fun observerUserData() {
+        viewModel.user?.observe(this) { user ->
             user?.let { safeUser ->
                 userName.text = safeUser.name
                 Glide.with(this).load(safeUser.avatarURL).into(userAvatar)
             }
         }
 
-        viewModel.repos.observe(this) {repo ->
-            repo?.let {safeRepo ->
+        viewModel.repos.observe(this) { repo ->
+            repo?.let { safeRepo ->
                 val repoFrag = RepoListFragment.instance(safeRepo)
                 supportFragmentManager.beginTransaction()
                     .replace(R.id.listContainer, repoFrag)
@@ -39,16 +45,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.userApiError.observe(this) {handleError(it)}
-
-        viewModel.repoApiError.observe(this) {handleError(it)}
-
+        viewModel.userApiError.observe(this) { handleError(it) }
+        viewModel.repoApiError.observe(this) { handleError(it) }
         viewModel.state.observe(this) {
             showProgress(it)
-        }
-
-        searchBtn.setOnClickListener {
-            viewModel.getUser(editSearch.text.toString())
         }
     }
 
