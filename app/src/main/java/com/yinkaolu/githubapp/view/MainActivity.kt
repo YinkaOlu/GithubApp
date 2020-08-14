@@ -7,7 +7,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.observe
 import com.squareup.picasso.Picasso
 import com.yinkaolu.githubapp.R
+import com.yinkaolu.githubapp.data.api.ApiError
 import com.yinkaolu.githubapp.data.repository.DataState
+import com.yinkaolu.githubapp.view.fragment.repolist.ErrorFragment
 import com.yinkaolu.githubapp.view.fragment.repolist.RepoListFragment
 import com.yinkaolu.githubapp.viewmodel.GithubViewModel
 import kotlinx.android.synthetic.main.activity_main.*
@@ -37,11 +39,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         viewModel.userApiError.observe(this) {
-            // TODO: Show User load error
+            it?.let { safeError -> handleError(safeError)}
         }
 
         viewModel.repoApiError.observe(this) {
-            // TODO: Show Repo load error
+            it?.let { safeError -> handleError(safeError)}
         }
 
         viewModel.state.observe(this) {
@@ -59,5 +61,12 @@ class MainActivity : AppCompatActivity() {
         } else {
             loadingBar.visibility = View.GONE
         }
+    }
+
+    private fun handleError(error: ApiError) {
+        val frag = ErrorFragment.instance(error.message)
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.listContainer, frag)
+            .commit()
     }
 }
