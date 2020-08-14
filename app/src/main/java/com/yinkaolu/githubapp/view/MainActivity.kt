@@ -1,13 +1,13 @@
-package com.yinkaolu.githubapp
+package com.yinkaolu.githubapp.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
+import com.yinkaolu.githubapp.R
 import com.yinkaolu.githubapp.data.repository.DataState
+import com.yinkaolu.githubapp.view.fragment.repolist.RepoListFragment
 import com.yinkaolu.githubapp.viewmodel.GithubViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -19,12 +19,19 @@ class MainActivity : AppCompatActivity() {
 
         viewModel = ViewModelProvider(this).get(GithubViewModel::class.java)
 
-        viewModel.user?.observe(this){
-            // TODO: Show user
+        viewModel.user?.observe(this){ user ->
+            user?.let { safeUser ->
+                userName.text = safeUser.name
+            }
         }
 
-        viewModel.repos.observe(this) {
-            // TODO: Show repo
+        viewModel.repos.observe(this) {repo ->
+            repo?.let {safeRepo ->
+                val repoFrag = RepoListFragment.instance(safeRepo)
+                supportFragmentManager.beginTransaction()
+                    .add(R.id.listContainer, repoFrag)
+                    .commit()
+            }
         }
 
         viewModel.userApiError.observe(this) {
@@ -44,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun showProgress(dataState: DataState) {
+    private fun showProgress(dataState: DataState) {
         if (dataState === DataState.LOADING) {
             loadingBar.visibility = View.VISIBLE
         } else {

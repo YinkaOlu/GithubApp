@@ -10,5 +10,5 @@ interface GithubAPI {
     @GET("users/{userName}")
     fun getUser(@Path("userName") userName: String?): Call<GithubUser>
     @GET("users/{userName}/repos")
-    fun getUserRepo(@Path("userName") userName: String?): Call<List<GithubRepo>>
+    fun getUserRepo(@Path("userName") userName: String?): Call<ArrayList<GithubRepo>>
 }

@@ -11,7 +11,7 @@ import kotlin.concurrent.thread
 
 class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient()): GithubRepository(apiClient) {
     private val userCache: HashMap<String, GithubUser> = hashMapOf()
-    private val repoCache: HashMap<String, List<GithubRepo>> = hashMapOf()
+    private val repoCache: HashMap<String, ArrayList<GithubRepo>> = hashMapOf()
 
     override fun loadUser(userName: String, considerCache: Boolean): LiveData<GithubUser?> {
         if (considerCache && userCache[userName] !== null) {
@@ -36,7 +36,7 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient(
         return currentUser
     }
 
-    override fun loadUserRepo(userName: String?, considerCache: Boolean): LiveData<List<GithubRepo>?> {
+    override fun loadUserRepo(userName: String?, considerCache: Boolean): LiveData<ArrayList<GithubRepo>?> {
         val githubUserName = userName ?: _currentUser.value?.name
         ?: throw IllegalArgumentException("user name must be provided if there is no currently loaded Github user data")
 
@@ -44,8 +44,8 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient(
             _currentRepoList.postValue(repoCache[githubUserName])
         } else {
             _state.postValue(DataState.LOADING)
-            apiClient.getUserRepo(githubUserName, object : ClientCallback<List<GithubRepo>> {
-                override fun onSuccess(payload: List<GithubRepo>) {
+            apiClient.getUserRepo(githubUserName, object : ClientCallback<ArrayList<GithubRepo>> {
+                override fun onSuccess(payload: ArrayList<GithubRepo>) {
                     _currentRepoList.postValue(payload)
                     _repoApiError.postValue(null)
                     repoCache[githubUserName] = payload

@@ -5,7 +5,7 @@ import com.yinkaolu.githubapp.data.model.GithubUser
 
 interface GithubAPIClient {
     fun getUserDetails(userName: String, cb: ClientCallback<GithubUser>)
-    fun getUserRepo(userName: String, cb: ClientCallback<List<GithubRepo>>)
+    fun getUserRepo(userName: String, cb: ClientCallback<ArrayList<GithubRepo>>)
 }
 
 interface ClientCallback<T> {

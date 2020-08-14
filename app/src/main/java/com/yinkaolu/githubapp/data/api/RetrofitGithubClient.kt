@@ -45,7 +45,7 @@ class RetrofitGithubClient(api: GithubAPI? = null): GithubAPIClient {
 
     }
 
-    override fun getUserRepo(userName: String, cb: ClientCallback<List<GithubRepo>>) {
+    override fun getUserRepo(userName: String, cb: ClientCallback<ArrayList<GithubRepo>>) {
         thread {
             try {
                 val response = api.getUserRepo(userName).execute()
