@@ -7,6 +7,7 @@ import com.yinkaolu.githubapp.data.api.ClientCallback
 import com.yinkaolu.githubapp.data.api.GithubAPIClient
 import com.yinkaolu.githubapp.data.api.RetrofitGithubClient
 import com.yinkaolu.githubapp.data.model.GithubRepo
+import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
 
 enum class DataState {
@@ -19,8 +20,8 @@ abstract class GithubRepository(apiClient: GithubAPIClient) {
     protected val _currentUser: MutableLiveData<GithubUser?> = MutableLiveData()
     val currentUser: LiveData<GithubUser?> = _currentUser
 
-    protected val _currentRepoList: MutableLiveData<ArrayList<GithubRepo>?> = MutableLiveData()
-    val currentRepoList: LiveData<ArrayList<GithubRepo>?> = _currentRepoList
+    protected val _currentRepoList: MutableLiveData<GithubRepos?> = MutableLiveData()
+    val currentRepoList: LiveData<GithubRepos?> = _currentRepoList
 
     protected val _userApiError: MutableLiveData<ApiError?> = MutableLiveData()
     val userApiError: LiveData<ApiError?> = _userApiError
@@ -33,6 +34,6 @@ abstract class GithubRepository(apiClient: GithubAPIClient) {
 
 
     abstract fun loadUser(userName: String, considerCache: Boolean=true): LiveData<GithubUser?>
-    abstract fun loadUserRepo(userName: String? = null, considerCache: Boolean=true): LiveData<ArrayList<GithubRepo>?>
+    abstract fun loadUserRepo(userName: String? = null, considerCache: Boolean=true): LiveData<GithubRepos?>
     abstract fun clear(userName: String?=null)
 }

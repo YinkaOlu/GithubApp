@@ -5,9 +5,10 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.yinkaolu.githubapp.R
 import com.yinkaolu.githubapp.data.model.GithubRepo
+import com.yinkaolu.githubapp.data.model.GithubRepos
 
 class RepoListAdapter(
-    private var repoList: ArrayList<GithubRepo>,
+    private var repoList: GithubRepos,
     private var listener: RepoListItemListener
 ): RecyclerView.Adapter<RepoListItemHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RepoListItemHolder {

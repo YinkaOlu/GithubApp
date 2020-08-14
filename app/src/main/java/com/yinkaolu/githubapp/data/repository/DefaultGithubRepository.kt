@@ -6,12 +6,13 @@ import com.yinkaolu.githubapp.data.api.ClientCallback
 import com.yinkaolu.githubapp.data.api.GithubAPIClient
 import com.yinkaolu.githubapp.data.api.RetrofitGithubClient
 import com.yinkaolu.githubapp.data.model.GithubRepo
+import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
 import kotlin.concurrent.thread
 
-class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient()): GithubRepository(apiClient) {
+class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient.instance): GithubRepository(apiClient) {
     private val userCache: HashMap<String, GithubUser> = hashMapOf()
-    private val repoCache: HashMap<String, ArrayList<GithubRepo>> = hashMapOf()
+    private val repoCache: HashMap<String, GithubRepos> = hashMapOf()
 
     override fun loadUser(userName: String, considerCache: Boolean): LiveData<GithubUser?> {
         if (considerCache && userCache[userName] !== null) {
@@ -36,7 +37,7 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient(
         return currentUser
     }
 
-    override fun loadUserRepo(userName: String?, considerCache: Boolean): LiveData<ArrayList<GithubRepo>?> {
+    override fun loadUserRepo(userName: String?, considerCache: Boolean): LiveData<GithubRepos?> {
         val githubUserName = userName ?: _currentUser.value?.name
         ?: throw IllegalArgumentException("user name must be provided if there is no currently loaded Github user data")
 
@@ -44,8 +45,8 @@ class DefaultGithubRepository(apiClient: GithubAPIClient = RetrofitGithubClient(
             _currentRepoList.postValue(repoCache[githubUserName])
         } else {
             _state.postValue(DataState.LOADING)
-            apiClient.getUserRepo(githubUserName, object : ClientCallback<ArrayList<GithubRepo>> {
-                override fun onSuccess(payload: ArrayList<GithubRepo>) {
+            apiClient.getUserRepo(githubUserName, object : ClientCallback<GithubRepos> {
+                override fun onSuccess(payload: GithubRepos) {
                     _currentRepoList.postValue(payload)
                     _repoApiError.postValue(null)
                     repoCache[githubUserName] = payload

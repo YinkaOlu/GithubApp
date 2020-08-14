@@ -6,10 +6,12 @@ import com.yinkaolu.githubapp.data.api.ApiErrorType
 import com.yinkaolu.githubapp.data.api.ClientCallback
 import com.yinkaolu.githubapp.data.api.GithubAPIClient
 import com.yinkaolu.githubapp.data.model.GithubRepo
+import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
 import com.yinkaolu.githubapp.data.repository.DefaultGithubRepository
 import junit.framework.Assert.assertEquals
 import org.junit.Assert
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentCaptor
@@ -22,10 +24,14 @@ import java.util.concurrent.TimeUnit
 
 class GithubRepositoryTest {
     private val testUser = GithubUser("test", "/path")
-    private val testRepos = arrayListOf(
-        GithubRepo("test1", updatedAt = "2020-08-10T15:08:32Z", stargazers = 1, forks = 2),
-        GithubRepo("test2", updatedAt = "2020-06-10T15:08:32Z", stargazers = 2, forks = 3)
-    )
+    private val testRepos = GithubRepos()
+
+    @Before
+    fun setUp() {
+        testRepos.add(GithubRepo("test1", updatedAt = "2020-08-10T15:08:32Z", stargazers = 1, forks = 2))
+        testRepos.add(GithubRepo("test2", updatedAt = "2020-06-10T15:08:32Z", stargazers = 2, forks = 3))
+
+    }
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()

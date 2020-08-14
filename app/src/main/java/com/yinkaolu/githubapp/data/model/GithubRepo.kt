@@ -5,7 +5,11 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
+class GithubRepos: ArrayList<GithubRepo>() {
+
+}
 
 class GithubRepo(
     val name: String,

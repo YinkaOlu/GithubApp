@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yinkaolu.githubapp.R
 import com.yinkaolu.githubapp.data.model.GithubRepo
+import com.yinkaolu.githubapp.data.model.GithubRepos
 import java.lang.IllegalArgumentException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -28,7 +29,7 @@ class RepoListFragment : Fragment(), RepoListItemListener {
         val view = inflater.inflate(R.layout.fragment_repo_list, container, false)
         val repoList = view.findViewById<RecyclerView>(R.id.repoList)
 
-        val repos: ArrayList<GithubRepo>? = arguments?.getParcelableArrayList(REPO_ARGS_KEY)
+        val repos: GithubRepos? = arguments?.getParcelableArrayList<GithubRepo>(REPO_ARGS_KEY) as GithubRepos
 
         if (repos === null) throw IllegalArgumentException("Repo list fragment requires bundle with ArrayList of GithubRepo")
 
@@ -43,7 +44,7 @@ class RepoListFragment : Fragment(), RepoListItemListener {
     companion object {
         private const val REPO_ARGS_KEY = "REPO_ARGS_KEY"
         private val dateStringFormat = SimpleDateFormat("MM dd, yyyy HH:mm:ss", Locale.CANADA)
-        fun instance(repos: ArrayList<GithubRepo>): RepoListFragment {
+        fun instance(repos: GithubRepos): RepoListFragment {
             val frag =
                 RepoListFragment()
             val repoBundle = Bundle()
