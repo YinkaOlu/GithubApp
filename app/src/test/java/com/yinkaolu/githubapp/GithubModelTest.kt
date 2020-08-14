@@ -6,12 +6,13 @@ import com.yinkaolu.githubapp.data.model.GithubRepo
 import com.yinkaolu.githubapp.data.model.GithubUser
 import org.junit.Test
 import org.junit.Assert.*
+import java.util.*
 
 
 class GithubModelTest {
     @Test
     fun testUserModelConversion() {
-        val userJsonElement = JsonParser().parse("{\"name\": \"The Octocat\",\"avatar_url\": \"https://avatars3.githubusercontent.com/u/583231?v=4\"}")
+        val userJsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
         val githubUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
 
         assertEquals("https://avatars3.githubusercontent.com/u/583231?v=4", githubUser.avatarURL)
@@ -20,19 +21,20 @@ class GithubModelTest {
 
     @Test
     fun testRepoModelConversion() {
-        val repoJsonElement = JsonParser().parse("{\n" +
-                "        \"name\" : \"Hello-World\",\n" +
-                "        \"description\" : \"My first repository on GitHub!\",\n" +
-                "        \"updated_at\" : \"2017-08-14T08:08:10Z\",\n" +
-                "        \"stargazers_count\": 1421,\n" +
-                "        \"forks\" : 1176\n" +
-                "    }")
-        val githubUser: GithubRepo = Gson().fromJson(repoJsonElement, GithubRepo::class.java)
+        val repoJsonElement = JsonParser().parse(GithubTestJson.testRepoJsonString)
+        val githubRepo: GithubRepo = Gson().fromJson(repoJsonElement, GithubRepo::class.java)
 
-        assertEquals( "Hello-World", githubUser.name)
-        assertEquals( "My first repository on GitHub!", githubUser.description)
-        assertEquals( "2017-08-14T08:08:10Z", githubUser.updatedAt)
-        assertEquals(1421, githubUser.stargazers)
-        assertEquals(1176, githubUser.forks)
+        assertEquals( "Hello-World", githubRepo.name)
+        assertEquals( "My first repository on GitHub!", githubRepo.description)
+        assertEquals( "2017-08-14T08:08:10Z", githubRepo.updatedAt)
+        assertEquals(1421, githubRepo.stargazers)
+        assertEquals(1176, githubRepo.forks)
+
+        val cal = Calendar.getInstance()
+        cal.time = githubRepo.updatedDate
+
+        assertEquals(2017, cal.get(Calendar.YEAR))
+        assertEquals(7, cal.get(Calendar.MONTH))
+        assertEquals(14, cal.get(Calendar.DAY_OF_MONTH))
     }
 }
