@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.TextView
 import com.yinkaolu.githubapp.R
 
+/**
+ * Fragment to display Error State
+ */
 class ErrorFragment : Fragment() {
 
     override fun onCreateView(

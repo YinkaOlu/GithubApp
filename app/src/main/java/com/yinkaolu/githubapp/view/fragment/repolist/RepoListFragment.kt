@@ -20,6 +20,9 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
+/**
+ * Fragment to display Repository list data
+ */
 class RepoListFragment : Fragment(), RepoListItemListener {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

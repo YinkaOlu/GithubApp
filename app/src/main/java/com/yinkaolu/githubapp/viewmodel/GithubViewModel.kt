@@ -8,6 +8,9 @@ import com.yinkaolu.githubapp.data.repository.DataState
 import com.yinkaolu.githubapp.data.repository.DefaultGithubRepository
 import com.yinkaolu.githubapp.data.repository.GithubRepository
 
+/**
+ * View model to control the data flow between view and data layer.
+ */
 class GithubViewModel(
     private val repository: GithubRepository = DefaultGithubRepository()
 ): ViewModel() {
@@ -19,19 +22,15 @@ class GithubViewModel(
     val repoApiError: LiveData<ProviderError?> = repository.repositoryError
     val state: LiveData<DataState> = repository.repositoryDataState
 
-    private val searchHistory: ArrayList<String> = arrayListOf()
-
+    /**
+     * Call to load data user information and repository information for user from repository
+     * Loads user data if input name is not empty
+     * Does not consider cache if doing a fresh download (ie, when refreshing stale data
+     */
     fun getUser(inputUserName: String, freshDownload: Boolean=false) {
-        /**
-         * Load user data if,
-         * 1. input name is not empty
-         * and
-         * 2. is a fresh download or not the currently presented user
-         */
         if (inputUserName.isNotEmpty()) {
             repository.loadUser(inputUserName, !freshDownload)
             repository.loadUserRepo(inputUserName, !freshDownload)
-            searchHistory.add(inputUserName)
         }
     }
 }

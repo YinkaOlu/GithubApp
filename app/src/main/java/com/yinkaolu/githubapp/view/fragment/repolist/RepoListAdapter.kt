@@ -7,6 +7,9 @@ import com.yinkaolu.githubapp.R
 import com.yinkaolu.githubapp.data.model.GithubRepo
 import com.yinkaolu.githubapp.data.model.GithubRepos
 
+/**
+ * RecyclerView Adaptor to list Repository data
+ */
 class RepoListAdapter(
     private var repoList: GithubRepos,
     private var listener: RepoListItemListener
