@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
             repo?.let {safeRepo ->
                 val repoFrag = RepoListFragment.instance(safeRepo)
                 supportFragmentManager.beginTransaction()
-                    .add(R.id.listContainer, repoFrag)
+                    .replace(R.id.listContainer, repoFrag)
                     .commit()
             }
         }
