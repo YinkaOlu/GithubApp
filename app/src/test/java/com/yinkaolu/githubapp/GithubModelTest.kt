@@ -3,6 +3,7 @@ package com.yinkaolu.githubapp
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.yinkaolu.githubapp.data.model.GithubRepo
+import com.yinkaolu.githubapp.data.model.GithubRepos
 import com.yinkaolu.githubapp.data.model.GithubUser
 import org.junit.Test
 import org.junit.Assert.*
@@ -14,17 +15,16 @@ import java.util.*
 class GithubModelTest {
     @Test
     fun testConversation_GithubUser() {
-        val userJsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
-        val githubUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
+        val githubUser: GithubUser = Gson().fromJson(GithubTestJson.getUserJson(), GithubUser::class.java)
 
         assertEquals("https://avatars3.githubusercontent.com/u/583231?v=4", githubUser.avatarURL)
         assertEquals("The Octocat", githubUser.name)
     }
 
     @Test
-    fun testConversation_GithubRepo() {
-        val repoJsonElement = JsonParser().parse(GithubTestJson.testRepoJsonString)
-        val githubRepo: GithubRepo = Gson().fromJson(repoJsonElement, GithubRepo::class.java)
+    fun testConversation_GithubRepos() {
+        val githubRepos: GithubRepos = Gson().fromJson(GithubTestJson.getReposJson(), GithubRepos::class.java)
+        val githubRepo = githubRepos[0]
 
         assertEquals( "Hello-World", githubRepo.name)
         assertEquals( "My first repository on GitHub!", githubRepo.description)

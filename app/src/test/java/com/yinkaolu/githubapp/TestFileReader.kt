@@ -1,21 +1,26 @@
 package com.yinkaolu.githubapp
 
+import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.JsonParser
+import java.io.InputStreamReader
+
 object GithubTestJson {
-    val testUserJsonString = "{ \"name\": \"The Octocat\",\"avatar_url\": \"https://avatars3.githubusercontent.com/u/583231?v=4\"}"
+    fun getUserJson(): JsonElement? {
+        val inputStream = this.javaClass.classLoader?.getResourceAsStream("user.json")
+        return JsonParser().parse(InputStreamReader(inputStream, "UTF-8"))
+    }
 
-    val testRepoJsonString = "{\n" +
-            "        \"name\" : \"Hello-World\",\n" +
-            "        \"description\" : \"My first repository on GitHub!\",\n" +
-            "        \"updated_at\" : \"2017-08-14T08:08:10Z\",\n" +
-            "        \"stargazers_count\": 1421,\n" +
-            "        \"forks\" : 1176\n" +
-            "    }"
+    fun getUserJsonString(): String {
+        return Gson().toJson(getUserJson())
+    }
 
-    val testReposJsonString = "[{\n" +
-            "        \"name\" : \"Hello-World\",\n" +
-            "        \"description\" : \"My first repository on GitHub!\",\n" +
-            "        \"updated_at\" : \"2017-08-14T08:08:10Z\",\n" +
-            "        \"stargazers_count\": 1421,\n" +
-            "        \"forks\" : 1176\n" +
-            "    }]"
+    fun getReposJson(): JsonElement? {
+        val inputStream = this.javaClass.classLoader?.getResourceAsStream("repos.json")
+        return JsonParser().parse(InputStreamReader(inputStream, "UTF-8"))
+    }
+
+    fun getRepoJsonString(): String {
+        return Gson().toJson(getReposJson())
+    }
 }

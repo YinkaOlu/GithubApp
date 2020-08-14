@@ -27,11 +27,9 @@ class RetrofitGithubDataProviderTest {
     private lateinit var server: MockWebServer
     private lateinit var client: RetrofitDataProvider
 
-    private val userJsonElement: JsonElement = JsonParser().parse(GithubTestJson.testUserJsonString)
-    val testUser: GithubUser = Gson().fromJson(userJsonElement, GithubUser::class.java)
+    lateinit var testUser: GithubUser
 
-    private val reposJsonElement: JsonElement = JsonParser().parse(GithubTestJson.testReposJsonString)
-    val testRepos: GithubRepos = Gson().fromJson(reposJsonElement, GithubRepos::class.java)
+    lateinit var testRepos: GithubRepos
 
     private val userResponse = MockResponse()
     private val reposResponse = MockResponse()
@@ -45,10 +43,14 @@ class RetrofitGithubDataProviderTest {
         client = RetrofitDataProvider.instance
         client.set(server.url("").toString())
 
-        userResponse.setBody(GithubTestJson.testUserJsonString)
-        reposResponse.setBody(GithubTestJson.testReposJsonString)
+        userResponse.setBody(GithubTestJson.getUserJsonString())
+        reposResponse.setBody(GithubTestJson.getRepoJsonString())
 
         failedResponse.setResponseCode(HttpURLConnection.HTTP_BAD_REQUEST)
+
+        testUser = Gson().fromJson(GithubTestJson.getUserJson(), GithubUser::class.java)
+        val test = GithubTestJson.getReposJson()
+        testRepos = Gson().fromJson(test, GithubRepos::class.java)
     }
 
     @After
